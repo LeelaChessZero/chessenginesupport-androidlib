@@ -1,0 +1,17 @@
+environment:
+  matrix:
+    - ANDROID_HOME: "C:\\android-sdk-windows"
+install:
+  - appveyor DownloadFile https://dl.google.com/android/repository/sdk-tools-windows-3859397.zip
+  - 7z x sdk-tools-windows-3859397.zip -oC:\android-sdk-windows > nul
+  - yes | C:\android-sdk-windows\tools\bin\sdkmanager.bat --licenses
+before_build:
+  - cd LeelaChessEngine
+build_script:
+  - gradlew.bat assemble
+after_build:
+  - copy leelaChessEngine\build\outputs\apk\debug\leelaChessEngine-debug.apk ..\lc0-test-%APPVEYOR_BUILD_NUMBER%.apk
+artifacts:
+  - path: /lc0*.apk/
+    name: lc0-test-$(APPVEYOR_BUILD_NUMBER)-apk
+
